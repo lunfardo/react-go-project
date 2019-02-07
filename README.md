@@ -4,3 +4,9 @@ To run the project just be sure that docker and docker-compose are installed, an
 
 ### `docker-compose up`
 
+
+After that you enter the app through browser:
+
+### `http://10.5.0.4/  (nginx, proxy service)` 
+
+(you can change ips/networks on the docker composer file)
