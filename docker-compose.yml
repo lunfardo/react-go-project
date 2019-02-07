@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+  apirest-service:
+    build: './apirest'
+    networks:
+      my_network:
+        ipv4_address: 10.5.0.2    
+
+
+
+  spa-service:
+    build: './spa'
+    volumes:
+      - ./spa/src:/usr/app/src
+    networks:
+      my_network:
+        ipv4_address: 10.5.0.3      
+
+  webserver-service:
+    build: './webserver'
+    networks:
+      my_network:
+        ipv4_address: 10.5.0.4       
+    
+    
+  db-service:
+    build: ./db
+    user: postgres
+    volumes:
+      - ./db/initdb_ext_scripts:/docker-entrypoint-initdb.d
+      #- ./storage/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+    networks:
+      my_network:
+        ipv4_address: 10.5.0.5      
+
+networks:
+  my_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16

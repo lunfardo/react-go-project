@@ -1,0 +1,18 @@
+
+.painters-box {
+    display: flex;
+  } 
+
+.painter-box>div{
+  flex-direction: row;
+}
+
+.painter-box{
+  width:  200px;
+  height: 140px !important;
+}
+
+.box{
+  margin-left: 20px;
+  height: 180px !important;
+}
