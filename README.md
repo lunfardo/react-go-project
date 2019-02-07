@@ -20,3 +20,5 @@ TODO:
 - Finish backend support for full crud operations
 - Validations in the backend
 - Better CSS D:
+- Comments on Paintings
+- Social
