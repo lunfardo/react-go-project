@@ -20,7 +20,8 @@ class PaintsList extends Component {
                     ).map((paintJSON) =>   
                            <PaintBox {...paintJSON} />
                     )
-                }</PaintContext.Consumer>                
+                }</PaintContext.Consumer>
+                <Link to="/paint/create" class="button is-primary">Add new Painting</Link> 
             </div>
         )
     }

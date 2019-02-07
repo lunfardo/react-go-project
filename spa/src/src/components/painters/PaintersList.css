@@ -1,6 +1,7 @@
 
 .painters-box {
     display: flex;
+    flex-wrap: wrap;
   } 
 
 .painter-box>div{

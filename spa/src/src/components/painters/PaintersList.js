@@ -16,13 +16,19 @@ class PaintersList extends Component {
 
     render(){
         return(
-            <div class="painters-box">
-                <PainterContext.Consumer>{
-                    painterContext => painterContext.paintersList.map((painterJSON) =>   
-                            <PainterBox painterid={painterJSON.Id} name={painterJSON.Name}/>
-                    )
-                }</PainterContext.Consumer>                
-            </div>
+            <div>
+                <div class="painters-box">
+                    <PainterContext.Consumer>{
+                        painterContext => painterContext.paintersList.map((painterJSON) =>   
+                                <PainterBox painterid={painterJSON.Id} name={painterJSON.Name}/>
+                        )
+                    }</PainterContext.Consumer> 
+                    <p>
+                    </p>
+                </div>
+                <Link to="/painter/create" class="button is-primary">Add new Painter</Link> 
+            </div>              
+
         )
     }
 }

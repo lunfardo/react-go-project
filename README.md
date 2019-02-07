@@ -2,5 +2,5 @@
 
 To run the project just be sure that docker and docker-compose are installed, and then:
 
-### `docker-compose up'
+### `docker-compose up`
 

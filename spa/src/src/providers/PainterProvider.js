@@ -4,7 +4,8 @@ import { PainterContext } from '../AppContexts'
 
 class PainterProvider extends Component {
     state = {
-      paintersList: []
+      paintersList: [],
+      submitPainterForm: this.submitPainterForm
     }
 
     async loadPaintersFromAPI(){
@@ -23,9 +24,28 @@ class PainterProvider extends Component {
 
     componentDidMount() {
         this.loadPaintersFromAPI().then((result)=>{
-            this.setState({paintersList: result})    
+            if(result!=null){
+              this.setState({paintersList: result})
+            }    
         })          
-    }    
+    } 
+    
+    async submitPainterForm() {
+
+      const rawResponse = await fetch(`//${window.location.host}/api/v1/painters`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({Name: this.state.name, CityOfOrigin: this.state.cityoforigin})
+      });
+      
+      if(rawResponse.status == 200) {
+        this.setState({redirect:true})
+      }      
+    }
+
     render() {
       return (
         <PainterContext.Provider value={this.state}>
@@ -33,5 +53,7 @@ class PainterProvider extends Component {
         </PainterContext.Provider>
       )}
 }
+
+
 
 export default PainterProvider

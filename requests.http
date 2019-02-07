@@ -1,28 +1,25 @@
-GET http://localhost:8080/api/v1/painters
+GET http://10.5.0.4/api/v1/painters
 
 ###
-GET http://localhost:8080/api/v1/paints
-
-###
-GET http://localhost:8080/comments
+GET http://10.5.0.4/api/v1/paints
 
 ###
 
-POST http://localhost:8080/api/v1/painters HTTP/1.1
+POST http://10.5.0.4/api/v1/painters HTTP/1.1
 content-type: application/json
 
 {
-    "Name": "Pedro Sanches3",
-    "CityOfOrigin": "Valencia3"
+    "Name": "Salvador Dali",
+    "CityOfOrigin": "Figueres"
 }
 
 ###
 
-POST http://localhost:8080/api/v1/paints HTTP/1.1
+POST http://10.5.0.4/api/v1/paints HTTP/1.1
 content-type: application/json
 
 {
-    "Name": "oretencia",
-    "CurrentLocation": "carlota",
+    "Name": "Living Still Life ",
+    "CurrentLocation": "dunno",
     "PainterId": 2
 }
