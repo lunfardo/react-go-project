@@ -24,19 +24,26 @@ class PaintProvider extends Component {
 
     componentDidMount() {
         this.loadPaintsFromAPI().then((result)=>{
-            this.setState({paintsList: result})    
+            if(result!=null){
+              this.setState({paintsList: result})
+            }    
         })          
     }  
     
-    async submitPaintForm() {
+    async submitPaintForm(event) {
+      event.preventDefault()
+
+      //create data object before request
+      var data = new FormData()
+      data.append('paintFile', this.state.paintFile)
+      data.append('Name', this.state.name)      
+      data.append('CurrentLocation', this.state.currentLocation)      
+      data.append('PainterId', parseInt(this.state.painter))      
+      console.log(data)
 
       const rawResponse = await fetch(`//${window.location.host}/api/v1/paints`, {
         method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({Name: this.state.name, CurrentLocation: this.state.currentLocation, PainterId: parseInt(this.state.painter)})
+        body: data
       });
       
       if(rawResponse.status == 200) {

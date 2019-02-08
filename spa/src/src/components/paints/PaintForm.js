@@ -5,18 +5,38 @@ import { Redirect } from 'react-router-dom'
 
 
 
+const PainterSelector = ({onChange, painterContext}) =>
+    <div class="field">
+        <label class="label">Painter</label>
+        <div class="control">
+            <div class="select">
+            <select onChange={onChange}>
+                <option>Choose Painter</option>
+                {painterContext.paintersList.map((painter)=><option value={painter.Id}>{painter.Name}</option>)}
+            </select>
+            </div>
+        </div>
+    </div>
+
+const FileInput = ({onChange}) => 
+    <div class="field">
+        <input type="file" onChange={onChange} name="resume"/>
+    </div>
+
 class PaintForm extends Component{
     constructor(props) {
         super(props);
         this.state = {
           name: '',
           currentLocation: '',
+          paintFile: null,
           painter: 0
         };
     
-        this.handleNameChange = this.handleNameChange.bind(this);
-        this.handleLocationChange = this.handleLocationChange.bind(this);
-        this.handlePainterChange = this.handlePainterChange.bind(this);
+        this.handleNameChange = this.handleNameChange.bind(this)
+        this.handleLocationChange = this.handleLocationChange.bind(this)
+        this.handlePainterChange = this.handlePainterChange.bind(this)
+        this.handleselectedFile = this.handleselectedFile.bind(this)
     }
 
     handleNameChange(event) {
@@ -28,8 +48,13 @@ class PaintForm extends Component{
     }
 
     handlePainterChange(event) {
-        alert(event.target.value)
         this.setState({painter: event.target.value});
+    }
+
+    handleselectedFile(event) {
+        this.setState({
+          paintFile: event.target.files[0]
+        })
     }
           
 
@@ -39,33 +64,30 @@ class PaintForm extends Component{
         }
 
         return (
+    
     <PainterContext.Consumer>
     {painterContext =>        
     <PaintContext.Consumer>
     {paintContext =>
-            <div class="field">
-                <legend>Create New Painting Form</legend>
-                <label class="label">Name</label>
-                <div class="control">
-                    <input class="input" type="text" placeholder="Name" value={this.state.name}  onChange={this.handleNameChange}/>
-                </div>
-
-                <label class="label">Current Location</label>
-                <div class="control">
-                    <input class="input" type="text" placeholder="Current Location" value={this.state.currentLocation} onChange={this.handleLocationChange}/>
-                </div>        
-
+        <form>
                 <div class="field">
-                <label class="label">Painter</label>
-                <div class="control">
-                    <div class="select">
-                    <select onChange={this.handlePainterChange}>
-                        <option>Choose Painter</option>
-                        {painterContext.paintersList.map((painter)=><option value={painter.Id}>{painter.Name}</option>)}
-                    </select>
+                    <legend>Create New Painting Form</legend>
+                    <label class="label">Name</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Name" value={this.state.name}  onChange={this.handleNameChange}/>
                     </div>
                 </div>
-                </div>                
+
+                <div class="field">                
+                    <label class="label">Current Location</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Current Location" value={this.state.currentLocation} onChange={this.handleLocationChange}/>
+                    </div>   
+                </div>     
+
+                <PainterSelector onChange={this.handlePainterChange} painterContext={painterContext} />
+
+                <FileInput onChange={this.handleselectedFile}/>               
 
                 <div class="field is-grouped">
                     <div class="control">
@@ -75,7 +97,7 @@ class PaintForm extends Component{
                         <button class="button is-text">Cancel</button>
                     </div>
                 </div>
-            </div>
+        </form>
     }
     </PaintContext.Consumer>
     }

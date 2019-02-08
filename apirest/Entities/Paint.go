@@ -2,6 +2,7 @@ package Entities
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"log"
 )
 
@@ -14,6 +15,15 @@ type PaintStructure struct {
 	PainterId       int
 	Name            string
 	CurrentLocation string
+	Image           []byte
+}
+
+type PaintStructureJSON struct {
+	Id              int
+	PainterId       int
+	Name            string
+	CurrentLocation string
+	Image           string
 }
 
 var PaintEntity PaintEntityStruct
@@ -22,8 +32,8 @@ func (e *PaintEntityStruct) AddDB(conn *sql.DB) {
 	e.dbConn = conn
 }
 
-func (e *PaintEntityStruct) All() []PaintStructure {
-	var allPaints []PaintStructure
+func (e *PaintEntityStruct) All() []PaintStructureJSON {
+	var allPaints []PaintStructureJSON
 	sqlIndexPainters := `SELECT * FROM paints`
 	//Get all Paints
 	rows, err := e.dbConn.Query(sqlIndexPainters)
@@ -34,19 +44,23 @@ func (e *PaintEntityStruct) All() []PaintStructure {
 
 	//rows -> []PaintStructure
 	for rows.Next() {
-		var temp PaintStructure
-		err := rows.Scan(&temp.Id, &temp.PainterId, &temp.Name, &temp.CurrentLocation)
+		var saveByteArray []byte
+		var temp PaintStructureJSON
+		err := rows.Scan(&temp.Id, &temp.PainterId, &temp.Name, &temp.CurrentLocation, &saveByteArray)
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		temp.Image = base64.StdEncoding.EncodeToString(saveByteArray)
+
 		allPaints = append(allPaints, temp)
 	}
 	return allPaints
 }
 
-func (e *PaintEntityStruct) Create(name string, currentlocation string, idPainter int) {
-	sqlStorePaint := `INSERT INTO paints(PainterId,Name,CurrentLocation) VALUES ($1,$2,$3)`
-	_, err := e.dbConn.Exec(sqlStorePaint, idPainter, name, currentlocation)
+func (e *PaintEntityStruct) Create(name string, currentlocation string, idPainter int, bytes []byte) {
+	sqlStorePaint := `INSERT INTO paints(PainterId,Name,CurrentLocation,Image) VALUES ($1,$2,$3, $4)`
+	_, err := e.dbConn.Exec(sqlStorePaint, idPainter, name, currentlocation, bytes)
 	if err != nil {
 		log.Fatal(err)
 	}

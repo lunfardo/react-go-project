@@ -22,3 +22,4 @@ TODO:
 - Better CSS D:
 - Comments on Paintings
 - Social
+- More information abouts painters/paitings

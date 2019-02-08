@@ -2,10 +2,13 @@ import React, { Component } from 'react'
 import { PaintContext } from '../../AppContexts'
 import { Link } from 'react-router-dom'
 
-const PaintBox = ({Name, CurrentLocation})=>
-    <div class="box">
-        <h3>{Name}</h3>
-        <span>{CurrentLocation}</span>
+const PaintBox = ({Name, CurrentLocation, Image})=>
+    <div class="">
+        <div>
+            <h3>Paiting Name: {Name}</h3>
+            <span>Current Location: {CurrentLocation}</span>
+        </div>
+        <img src={`data:image/png;base64, ${Image}`} alt="Red dot" />
     </div>
 
 
