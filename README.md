@@ -13,13 +13,11 @@ After that you enter the app through browser:
 
 
 TODO:
-- Images support (both for painter profile and paintings)
 - Forms Validations
 - Registration
 - Redis Cache
 - Finish backend support for full crud operations
 - Validations in the backend
-- Better CSS D:
 - Comments on Paintings
 - Social
 - More information abouts painters/paitings
