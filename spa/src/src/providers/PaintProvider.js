@@ -24,6 +24,7 @@ class PaintProvider extends Component {
 
     componentDidMount() {
         this.loadPaintsFromAPI().then((result)=>{
+            console.log(result)
             if(result!=null){
               this.setState({paintsList: result})
             }    

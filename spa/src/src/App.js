@@ -9,6 +9,7 @@ import PaintsList from './components/paints/PaintsList'
 import PaintForm from './components/paints/PaintForm'
 import PainterShow from './components/painters/PainterShow'
 import PainterForm from './components/painters/PainterForm'
+import Topbar from './portals/TopBar'
 
 
 class App extends Component {
@@ -22,10 +23,14 @@ class App extends Component {
     return (
       <BrowserRouter>
       <div className="App">
-      <section class="section">
-        <Link to="/">
-          <span class="app-title">The Paints Corner</span>
-        </Link>
+      <section className="section">
+        <Topbar>
+          <div style={{background: "aquamarine"}}>
+            <Link to="/">
+              <span className="app-title">🎨 PAITINGS CORNER</span>
+            </Link>
+          </div>
+        </Topbar>
         
           <PainterProvider>
           <PaintProvider>

@@ -5,10 +5,13 @@ import { Link } from 'react-router-dom'
 import './PaintersList.css'
 
 
-const PainterBox = ({painterid, name})=>
-    <div class="box">
-        <div class="painter-box content">
-            <Link to={`/painter/${painterid}`}>{name}</Link>
+const PainterBox = ({Id, Name, Image})=>
+    <div class="box painter-box">
+        <div class="content">
+            <div>
+                <Link to={`/painter/${Id}`}>{Name}</Link>
+            </div>
+            <img  class ="painter-picture" src={`data:image/png;base64, ${Image}`}/>
         </div>
     </div>
 
@@ -20,13 +23,13 @@ class PaintersList extends Component {
                 <div class="painters-box">
                     <PainterContext.Consumer>{
                         painterContext => painterContext.paintersList.map((painterJSON) =>   
-                                <PainterBox painterid={painterJSON.Id} name={painterJSON.Name}/>
+                                <PainterBox {...painterJSON} />
                         )
                     }</PainterContext.Consumer> 
                     <p>
                     </p>
                 </div>
-                <Link to="/painter/create" class="button is-primary">Add new Painter</Link> 
+                <Link to="/painter/create" class="button is-primary">Add New Painter</Link> 
             </div>              
 
         )

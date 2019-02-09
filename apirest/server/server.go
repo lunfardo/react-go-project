@@ -29,8 +29,8 @@ func Serve() {
 	PaintDI := &Entities.PaintEntity
 	PaintDI.AddDB(conn)
 
-	PaintersControllerCapsule := &Controllers.Controller{Controllers.PaintersController}
-	PaintsControllerCapsule := &Controllers.Controller{Controllers.PaintsController}
+	PaintersControllerCapsule := &Controllers.ResourceDemux{Controllers.PaintersController}
+	PaintsControllerCapsule := &Controllers.ResourceDemux{Controllers.PaintsController}
 
 	fmt.Println("Starting server...")
 	// 	PaintersController := (*painters.PaintersController)(structs.MakeController(conn))

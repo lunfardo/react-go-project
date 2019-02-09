@@ -2,11 +2,15 @@ package Entities
 
 import (
 	"database/sql"
+	"encoding/base64"
+	"io/ioutil"
 	"log"
+	"mime/multipart"
 )
 
 type PainterEntityStruct struct {
 	dbConn *sql.DB
+	entity *PainterStructure
 }
 
 type PainterStructure struct {
@@ -14,25 +18,37 @@ type PainterStructure struct {
 	Name         string
 	CityOfOrigin string
 	Diedrich     bool
+	Image        []byte
 }
+
+type PainterStructureBASE64 struct {
+	Id           int
+	Name         string
+	CityOfOrigin string
+	Diedrich     bool
+	Image        string
+}
+
+type PainterStructureArray []PainterStructure
+type PainterStructureBASE64Array []PainterStructureBASE64
 
 var PainterEntity PainterEntityStruct
 
-func (e *PainterEntityStruct) AddDB(conn *sql.DB) {
-	e.dbConn = conn
+func (s *PainterEntityStruct) AddDB(conn *sql.DB) {
+	s.dbConn = conn
 }
 
-func (e *PainterEntityStruct) All() []PainterStructure {
-	var allPainters []PainterStructure
+func (s *PainterEntityStruct) All() PainterStructureArray {
+	var allPainters PainterStructureArray
 	sqlIndexPainters := `SELECT * FROM painters`
-	rows, err := e.dbConn.Query(sqlIndexPainters)
+	rows, err := s.dbConn.Query(sqlIndexPainters)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var temp PainterStructure
-		err := rows.Scan(&temp.Id, &temp.Name, &temp.CityOfOrigin, &temp.Diedrich)
+		err := rows.Scan(&temp.Id, &temp.Name, &temp.CityOfOrigin, &temp.Diedrich, &temp.Image)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -41,10 +57,38 @@ func (e *PainterEntityStruct) All() []PainterStructure {
 	return allPainters
 }
 
-func (e *PainterEntityStruct) Create(name string, cityoforigin string) {
-	sqlStorePainter := `INSERT INTO painters(Fullname,CityOfOrigin) VALUES ($1,$2)`
-	_, err := e.dbConn.Exec(sqlStorePainter, name, cityoforigin)
-	if err != nil {
-		log.Fatal(err)
+func (s *PainterEntityStruct) Make(name string, cityoforigin string) *PainterStructure {
+	s.entity = &PainterStructure{Name: name, CityOfOrigin: cityoforigin}
+	return s.entity
+}
+
+func (e *PainterStructure) AddImageFile(f multipart.File) error {
+	bytes, err := ioutil.ReadAll(f)
+	e.Image = bytes
+	return err
+}
+
+func (s *PainterEntityStruct) Save() error {
+	sqlStorePainter := `INSERT INTO painters(Fullname,CityOfOrigin,Image) VALUES ($1,$2,$3)`
+	_, err := s.dbConn.Exec(sqlStorePainter, s.entity.Name, s.entity.CityOfOrigin, s.entity.Image)
+	return err
+}
+
+func (s *PainterEntityStruct) Release() {
+	s.entity = nil
+}
+
+func (a PainterStructureArray) BytesToBase64() PainterStructureBASE64Array {
+
+	result := make(PainterStructureBASE64Array, len(a))
+	for index, element := range a {
+		result[index] = PainterStructureBASE64{
+			Id:           element.Id,
+			Name:         element.Name,
+			CityOfOrigin: element.CityOfOrigin,
+			Diedrich:     element.Diedrich,
+			Image:        base64.StdEncoding.EncodeToString(element.Image),
+		}
 	}
+	return result
 }

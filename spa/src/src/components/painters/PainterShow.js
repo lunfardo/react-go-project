@@ -14,7 +14,7 @@ class PainterShow extends Component {
 
     render(){
         return(
-            <div class="painters-box">
+            <div className="painters-box">
             <PainterContext.Consumer>{
                 painterContext => painterContext.paintersList.filter((painterJSON) => 
                     painterJSON.Id == this.props.match.params.painterId

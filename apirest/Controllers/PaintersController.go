@@ -4,7 +4,6 @@ import (
 	"apirest/Entities"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -14,7 +13,7 @@ type paintersControllerStruct struct {
 func (c paintersControllerStruct) index(w http.ResponseWriter, h *http.Request) {
 	fmt.Println("resource painters index")
 
-	painters := Entities.PainterEntity.All()
+	painters := Entities.PainterEntity.All().BytesToBase64()
 
 	w.Header().Set("Content-Type", "application/json")
 	encoder := json.NewEncoder(w)
@@ -22,17 +21,42 @@ func (c paintersControllerStruct) index(w http.ResponseWriter, h *http.Request) 
 }
 
 func (c paintersControllerStruct) store(w http.ResponseWriter, h *http.Request) {
-	var data Entities.PainterStructure
+	fmt.Println("resource painters store")
 
-	decoder := json.NewDecoder(h.Body)
-	err := decoder.Decode(&data)
+	//parse multipart form post request
+	err := h.ParseMultipartForm(0)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 
-	Entities.PainterEntity.Create(data.Name, data.CityOfOrigin)
+	//make a new painter entity (no stored in db yet) and delete from the struct at the end
+	newPainter := Entities.PainterEntity.Make(h.FormValue("Name"), h.FormValue("CityOfOrigin"))
+	defer Entities.PainterEntity.Release()
 
-	fmt.Println("resource post:" + data.Name)
+	//get the painter profile picture
+	file, _, err := h.FormFile("painterFile")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	defer file.Close()
+
+	//add the recivied file image to the entity
+	err = newPainter.AddImageFile(file)
+
+	//check if file was copied correctly
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	//Store the new entity in the DB
+	err = Entities.PainterEntity.Save()
+
+	//check the entity was succesfully stored
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	fmt.Println("resource post:" + newPainter.Name)
 
 }
 

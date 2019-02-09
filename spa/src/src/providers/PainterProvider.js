@@ -31,15 +31,18 @@ class PainterProvider extends Component {
     } 
     
     async submitPainterForm() {
+      
+      //create data object before request
+      var data = new FormData()
+      data.append('painterFile', this.state.painterFile)
+      data.append('Name', this.state.name)      
+      data.append('CityOfOrigin', this.state.cityoforigin)      
+      console.log(data)
 
       const rawResponse = await fetch(`//${window.location.host}/api/v1/painters`, {
         method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({Name: this.state.name, CityOfOrigin: this.state.cityoforigin})
-      });
+        body: data
+      })
       
       if(rawResponse.status == 200) {
         this.setState({redirect:true})

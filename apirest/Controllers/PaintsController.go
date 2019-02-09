@@ -4,7 +4,6 @@ import (
 	"apirest/Entities"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 )
@@ -14,7 +13,7 @@ type paintsControllerStruct struct {
 
 func (c paintsControllerStruct) index(w http.ResponseWriter, h *http.Request) {
 	fmt.Println("resource paints index")
-	paints := Entities.PaintEntity.All()
+	paints := Entities.PaintEntity.All().BytesToBase64()
 
 	w.Header().Set("Content-Type", "application/json")
 	encoder := json.NewEncoder(w)
@@ -25,38 +24,43 @@ func (c paintsControllerStruct) index(w http.ResponseWriter, h *http.Request) {
 func (c paintsControllerStruct) store(w http.ResponseWriter, h *http.Request) {
 	fmt.Println("resource paints store")
 
-	var data Entities.PaintStructure
-
-	// Calling ParseMultipartForm, with maxMemory = 0. Tried also with 32, 10000 etc. but without success.
+	//parse multipart form post request
 	err := h.ParseMultipartForm(0)
 	if err != nil {
 		fmt.Println(err)
 	}
 
+	//get painter id
+	painterId, _ := strconv.Atoi(h.FormValue("PainterId"))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	//make a new painter entity (no stored in db yet) and delete from the struct at the end
+	newPaint := Entities.PaintEntity.Make(h.FormValue("Name"), h.FormValue("CurrentLocation"), painterId)
+	defer Entities.PaintEntity.Release()
+
 	//Handle file upload https://www.youtube.com/watch?v=lKXkgzEmIUk
-	file, headers, err := h.FormFile("paintFile")
+	file, _, err := h.FormFile("paintFile")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	defer file.Close()
 
-	fmt.Println("|nfile:", file, "|nheader:", headers, "|nerr", err)
+	//add the recivied file image to the entity
+	err = newPaint.AddImageFile(file)
 
-	//read the file
-	bytes, err := ioutil.ReadAll(file)
+	//check if file was copied correctly
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	s := string(bytes)
-	fmt.Println(s)
-	/**/
 
-	painterId, _ := strconv.Atoi(h.FormValue("PainterId"))
+	err = Entities.PaintEntity.Save()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 
-	Entities.PaintEntity.Create(h.FormValue("Name"), h.FormValue("CurrentLocation"), painterId, bytes)
-
-	fmt.Println("resource post:" + data.Name)
-
+	fmt.Println("resource post:" + newPaint.Name)
 }
 
 var PaintsController paintsControllerStruct

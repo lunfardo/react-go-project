@@ -1,7 +1,10 @@
-
+.box.painter-box {
+  background: #ffe7fa;
+}
 .painters-box {
     display: flex;
     flex-wrap: wrap;
+    text-align: center;
   } 
 
 .painter-box>div{
@@ -10,10 +13,15 @@
 
 .painter-box{
   width:  200px;
-  height: 140px !important;
+  /*height: 140px !important;*/
 }
 
 .box{
   margin-left: 20px;
-  height: 180px !important;
+  /*height: 180px !important;*/
+}
+
+.painter-picture{
+  max-height: 120px; 
+  border-radius: 10px;
 }

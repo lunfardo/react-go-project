@@ -1,0 +1,11 @@
+.paints-list-box{
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center; 
+}
+
+.paint-box{
+    flex-direction: row;
+    padding-right: 15px;
+  }
+  
