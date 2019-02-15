@@ -40,6 +40,12 @@ func (s *PainterEntityStruct) AddDB(conn *sql.DB) {
 
 func (s *PainterEntityStruct) All() PainterStructureArray {
 	var allPainters PainterStructureArray
+
+	err := s.dbConn.Ping()
+	if err != nil {
+		return allPainters
+	}
+
 	sqlIndexPainters := `SELECT * FROM painters`
 	rows, err := s.dbConn.Query(sqlIndexPainters)
 	if err != nil {
@@ -50,7 +56,7 @@ func (s *PainterEntityStruct) All() PainterStructureArray {
 		var temp PainterStructure
 		err := rows.Scan(&temp.Id, &temp.Name, &temp.CityOfOrigin, &temp.Diedrich, &temp.Image)
 		if err != nil {
-			log.Fatal(err)
+			log.Printf(err.Error())
 		}
 		allPainters = append(allPainters, temp)
 	}

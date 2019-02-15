@@ -7,8 +7,6 @@ services:
       my_network:
         ipv4_address: 10.5.0.2    
 
-
-
   spa-service:
     build: './spa'
     volumes:
@@ -22,8 +20,7 @@ services:
     networks:
       my_network:
         ipv4_address: 10.5.0.4       
-    
-    
+        
   db-service:
     build: ./db
     user: postgres

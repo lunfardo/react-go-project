@@ -12,10 +12,10 @@ import (
 )
 
 func getDatabaseConnection() *sql.DB {
-	connStr := "host=10.5.0.5 user=postgres password=mysecretpassword dbname=my_arts_database sslmode=disable"
+	connStr := "host=db-service user=postgres password=mysecretpassword dbname=my_arts_database sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err.Error())
 	}
 	return db
 }
@@ -24,6 +24,7 @@ func Serve() {
 	fmt.Println("Connection to Database...")
 	//depency injection to the entities
 	conn := getDatabaseConnection()
+
 	PainterDI := &Entities.PainterEntity
 	PainterDI.AddDB(conn)
 	PaintDI := &Entities.PaintEntity
