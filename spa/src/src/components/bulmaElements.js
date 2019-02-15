@@ -28,3 +28,10 @@ export const FileInput = ({label, filename, boxed, onChange}) =>
         </label>
         </div>
     </div>
+
+export const TextArea=({placeholder,value, onChange}) =>
+    <div class="field">
+        <div class="control">
+            <textarea class="textarea" placeholder={placeholder} onChange={onChange} value={value} />
+        </div>
+    </div>

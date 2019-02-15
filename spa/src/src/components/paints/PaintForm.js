@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { PaintContext } from '../../AppContexts'
 import { PainterContext } from '../../AppContexts'
 import { Redirect } from 'react-router-dom'
+import { Input, FileInput } from '../bulmaElements'
+
 
 
 
@@ -16,11 +18,6 @@ const PainterSelector = ({onChange, painterContext}) =>
             </select>
             </div>
         </div>
-    </div>
-
-const FileInput = ({onChange}) => 
-    <div class="field">
-        <input type="file" onChange={onChange} name="resume"/>
     </div>
 
 class PaintForm extends Component{
@@ -86,8 +83,8 @@ class PaintForm extends Component{
                 </div>     
 
                 <PainterSelector onChange={this.handlePainterChange} painterContext={painterContext} />
-
-                <FileInput onChange={this.handleselectedFile}/>               
+        
+                <FileInput label="Choose Paint Picture" boxed={true} filename={this.state.paintFile?this.state.paintFile.name:''} onChange={this.handleselectedFile}/>                                   
 
                 <div class="field is-grouped">
                     <div class="control">

@@ -3,13 +3,13 @@ import { PaintContext } from '../../AppContexts'
 import { Link } from 'react-router-dom'
 import './PaintsList.css'
 
-const PaintBox = ({Name, CurrentLocation, Image})=>
+const PaintBox = ({Id,Name, CurrentLocation, Image})=>
     <div class="paint-box">
         <div>
             <h3>Paiting Name: {Name}</h3>
             <span>Current Location: {CurrentLocation}</span>
         </div>
-        <Link to="/">
+        <Link to={`/paint/${Id}/comments`}>
             <img src={`data:image/png;base64, ${Image}`} style={{maxHeight: "140px"}} />
         </Link>
     </div>

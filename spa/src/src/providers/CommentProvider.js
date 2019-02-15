@@ -2,16 +2,21 @@ import React, { Component } from 'react';
 import { CommentContext } from '../AppContexts'
 
 
-class CommentProviders extends Component {
+class CommentProvider extends Component {
     state = {
-      somestate : "okayish"
+      somestate : "okayish",
+      alert: this.alert,
+    }
+
+    alert(){
+      alert('asdfjdk;')
     }
     render() {
       return (
-        <PaintersContext.Provider value={this.state}>
+        <CommentContext.Provider value={this.state}>
           {this.props.children}
-        </PaintersContext.Provider>
+        </CommentContext.Provider>
       )}
 }
 
-export default CommentProviders
+export default CommentProvider

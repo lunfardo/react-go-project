@@ -4,9 +4,11 @@ import './custom.css';
 import { BrowserRouter, Route, Link } from 'react-router-dom'
 import PainterProvider from './providers/PainterProvider'
 import PaintProvider from './providers/PaintProvider'
+import CommentProvider from './providers/CommentProvider'
 import PaintersList from './components/painters/PaintersList'
 import PaintsList from './components/paints/PaintsList'
 import PaintForm from './components/paints/PaintForm'
+import PaintComments from './components/paints/PaintComments'
 import PainterShow from './components/painters/PainterShow'
 import PainterForm from './components/painters/PainterForm'
 import Topbar from './portals/TopBar'
@@ -16,7 +18,6 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {apimessage: 'Click button to get answer'}
   }
 
   render() {
@@ -40,6 +41,9 @@ class App extends Component {
             <Route path="/painter/:painterId/paints" exact component={PaintsList}/>
             <Route path="/painter/create" exact component={PainterForm}/>
             <Route path="/paint/create" exact component={PaintForm}/>
+            <CommentProvider>
+            <Route path="/paint/:paintId/comments" exact component={PaintComments}/>
+            </CommentProvider>
 
           </PaintProvider>
           </PainterProvider>
