@@ -14,6 +14,6 @@ SHELL ["/bin/bash", "-c"]
 RUN npm install -g npm
 RUN npm install -g create-react-app
 
-CMD npm install
+CMD ["/bin/bash", "npm", "install"]
 ENTRYPOINT npm start
 
