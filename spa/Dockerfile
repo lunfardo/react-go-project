@@ -11,6 +11,7 @@ RUN adduser -D reactwebserver
 WORKDIR /usr/app/src
 
 RUN npm install
+RUN npm install create-react-app
 
 ENTRYPOINT npm start
 
