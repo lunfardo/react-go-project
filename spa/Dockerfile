@@ -12,8 +12,11 @@ WORKDIR /usr/app/src
 
 SHELL ["/bin/bash", "-c"]
 RUN npm install -g npm
-RUN npm install -g create-react-app
+COPY ./src/ /usr/app/src/
+WORKDIR /usr/app/src
+#just in case
+RUN rm -rf node_modules
+RUN npm install
 
-CMD ["/bin/bash", "npm", "install"]
 ENTRYPOINT npm start
 
