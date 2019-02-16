@@ -9,8 +9,8 @@ services:
 
   spa-service:
     build: './spa'
-    volumes:
-      - ./spa/src:/usr/app/src
+    #volumes:
+      #- ./spa/src:/usr/app/src
     networks:
       my_network:
         ipv4_address: 10.5.0.3      
